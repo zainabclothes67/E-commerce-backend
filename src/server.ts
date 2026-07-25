@@ -11,8 +11,6 @@ import cookieParser from "cookie-parser";
 const app = express();
 app.set("trust proxy", 1);
 
-connectDB();
-
 app.use(cors({
   origin: ["http://localhost:3000", "http://localhost:3001", "https://zainab-store.vercel.app"],
   credentials: true,
@@ -22,10 +20,24 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(async (_req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch {
+    res.status(500).json({ success: false, message: "Database connection error" });
+  }
+});
+
 app.use("/", router);
 app.use(errorHandler);
 
-const PORT: number = Number(process.env.PORT) || 8000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (require.main === module) {
+  const PORT: number = Number(process.env.PORT) || 8000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+export default app;
