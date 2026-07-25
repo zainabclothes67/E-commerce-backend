@@ -69,7 +69,7 @@ const bulkCSVUpload = async (req, res) => {
   if (!req.file) {
     throw new AppError("No file uploaded", 400);
   }
-  const stats = await ProductService.bulkImportFromCSV(req.file.path);
+  const stats = await ProductService.bulkImportFromCSV(req.file.buffer);
   res.json({ success: true, message: "CSV imported successfully", stats });
 };
 module.exports.bulkCSVUpload = bulkCSVUpload;

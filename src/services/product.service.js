@@ -1,5 +1,4 @@
-const fs = require("fs");
-const { Transform } = require("stream");
+const { Transform, Readable } = require("stream");
 const csvParser = require("csv-parser");
 const Product = require("../models/ProductModel");
 const { Discount } = require("../models/DiscountModel");
@@ -235,21 +234,17 @@ const stripBom = () => {
   });
 };
 
-const bulkImportFromCSV = async (filePath) => {
+const bulkImportFromCSV = async (fileBuffer) => {
   const rows = [];
 
-  try {
-    await new Promise((resolve, reject) => {
-      fs.createReadStream(filePath)
-        .pipe(stripBom())
-        .pipe(csvParser())
-        .on("data", (row) => rows.push(row))
-        .on("end", resolve)
-        .on("error", reject);
-    });
-  } finally {
-    fs.unlink(filePath, () => { });
-  }
+  await new Promise((resolve, reject) => {
+    Readable.from(fileBuffer)
+      .pipe(stripBom())
+      .pipe(csvParser())
+      .on("data", (row) => rows.push(row))
+      .on("end", resolve)
+      .on("error", reject);
+  });
 
   if (rows.length === 0) throw new AppError("CSV is empty", 400);
 
