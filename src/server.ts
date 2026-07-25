@@ -14,7 +14,7 @@ app.set("trust proxy", 1);
 connectDB();
 
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:3001", "https://zeds-perfume.netlify.app", "https://zeds-dashboard.netlify.app", "https://monkscents.com", "https://monkscents.ae", "https://monkscents-dashboard.netlify.app"],
+  origin: ["http://localhost:3000", "http://localhost:3001", "https://zainab-store.vercel.app"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "x-guest-id"],
   exposedHeaders: ["x-guest-id"],
