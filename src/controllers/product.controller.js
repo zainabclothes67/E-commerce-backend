@@ -27,6 +27,12 @@ const getProductById = async (req, res) => {
 };
 module.exports.getProductById = getProductById;
 
+const getActiveCategories = async (req, res) => {
+  const data = await ProductService.getActiveCategories();
+  res.status(200).json({ success: true, data });
+};
+module.exports.getActiveCategories = getActiveCategories;
+
 // ── Admin CRUD ────────────────────────────────────────────────────────────────
 
 const createProduct = async (req, res) => {

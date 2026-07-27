@@ -55,7 +55,10 @@ const buildSort = (sort) => {
     case "price-asc": return { price: 1 };
     case "price-desc": return { price: -1 };
     case "oldest": return { createdAt: 1 };
-    default: return { createdAt: -1 };
+    // "Best Selling" (Shop page default) and the homepage Best Sellers grid
+    // both fall through here — lower displayOrder shows first, and products
+    // sharing the same displayOrder (e.g. the default 0) fall back to newest-first.
+    default: return { displayOrder: 1, createdAt: -1 };
   }
 };
 
@@ -132,6 +135,14 @@ const getProductById = async (id, slug) => {
 };
 module.exports.getProductById = getProductById;
 
+// Distinct list of categories currently in use by active products — lets the
+// navbar only show category links that actually have products, instead of a
+// hardcoded list that may include empty categories.
+const getActiveCategories = async () => {
+  return Product.distinct("category", { status: "active" });
+};
+module.exports.getActiveCategories = getActiveCategories;
+
 // ── Admin CRUD ────────────────────────────────────────────────────────────────
 
 const getLastProductId = async () => {
@@ -163,6 +174,7 @@ const createProduct = async (body) => {
     category: body.category ?? [],
     sizes: body.sizes ?? [],
     colors: body.colors ?? [],
+    displayOrder: body.displayOrder !== undefined ? Number(body.displayOrder) : 0,
   });
 };
 module.exports.createProduct = createProduct;
@@ -188,6 +200,7 @@ const updateProduct = async (id, body) => {
   if (body.category !== undefined) updates.category = body.category;
   if (body.sizes !== undefined) updates.sizes = body.sizes;
   if (body.colors !== undefined) updates.colors = body.colors;
+  if (body.displayOrder !== undefined) updates.displayOrder = Number(body.displayOrder);
 
   const product = await Product.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
   if (!product) throw new AppError("Product not found", 404);
