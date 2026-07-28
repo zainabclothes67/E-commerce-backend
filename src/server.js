@@ -12,7 +12,7 @@ const app = express();
 app.set("trust proxy", 1);
 
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:3001", "https://zainab-store.vercel.app"],
+  origin: ["http://localhost:3000", "http://localhost:3001", "https://zainab-store.vercel.app", "https://www.zainabclothes.store", "https://zainabclothes.store"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "x-guest-id"],
   exposedHeaders: ["x-guest-id"],
