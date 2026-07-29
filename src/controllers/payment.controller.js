@@ -34,11 +34,7 @@ const createCodOrder = async (req, res) => {
     const userId = isAuthenticated ? ownerId : undefined;
     const { shippingAddress, guestEmail, couponCode } = req.body;
 
-    if (!isAuthenticated && !guestEmail) {
-      return res.status(400).json({ success: false, message: "Email is required for guest checkout" });
-    }
-
-    const requiredAddressFields = ["fullName", "line1", "city", "state", "postalCode", "country", "phone"];
+    const requiredAddressFields = ["fullName", "line1", "city", "state", "country", "phone"];
     for (const field of requiredAddressFields) {
       if (!shippingAddress?.[field]) {
         return res.status(400).json({ success: false, message: `shippingAddress.${field} is required` });
