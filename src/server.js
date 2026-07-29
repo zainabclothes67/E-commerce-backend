@@ -21,23 +21,20 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(async (_req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch {
-    res.status(500).json({ success: false, message: "Database connection error" });
-  }
-});
-
 app.use("/", router);
 app.use(errorHandler);
 
-if (require.main === module) {
-  const PORT = Number(process.env.PORT) || 8000;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+const PORT = Number(process.env.PORT) || 8000;
+
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Failed to connect to database:", error.message);
+    process.exit(1);
   });
-}
 
 module.exports = app;
