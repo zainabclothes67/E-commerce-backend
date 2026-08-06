@@ -29,7 +29,7 @@ const getCart = async (ownerId) => {
 
   const cart = await Cart.findOne({ ownerId }).populate(
     "items.productId",
-    "title images price stock slug"
+    "title images price stock slug colors"
   );
 
   const emptyPricing = {
