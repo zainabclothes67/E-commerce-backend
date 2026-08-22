@@ -75,3 +75,11 @@ const getOrderEmails = async (req, res) => {
   });
 };
 module.exports.getOrderEmails = getOrderEmails;
+
+
+const exportOrders = async (req, res) => {
+  const { orderIds } = req.body; 
+  const orders = await OrderService.getOrdersForExport(orderIds);
+  res.status(200).json({ success: true, orders });
+};
+module.exports.exportOrders = exportOrders;

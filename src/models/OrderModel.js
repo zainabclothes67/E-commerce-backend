@@ -81,7 +81,13 @@ const OrderSchema = new Schema(
         payment: { type: PaymentSchema, required: true },
         status: {
             type: String,
-            enum: ["processing", "preparation", "shipped", "delivered", "cancelled", "returned"],
+            enum: [
+                "processing",
+                "dispatch",
+                "delivered",
+                "returned",
+                "cancelled",
+            ],
             default: "processing",
             index: true,
         },
